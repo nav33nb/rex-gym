@@ -129,14 +129,6 @@ class Rex:
         self._motor_overheat_protection = motor_overheat_protection
         self._on_rack = on_rack
         self.pose_id = pose_id
-
-        # >>>>>> Camera Properties
-        pb=self._pybullet_client
-        fov, aspect, nearplane, farplane = 60, 1.0, 0.01, 100
-        self.projection_matrix = pb.computeProjectionMatrixFOV(fov, aspect, nearplane, farplane)
-        # <<<<<<
-
-
         # @TODO fix MotorModel
         if self._accurate_motor_model_enabled:
             self._kp = motor_kp
@@ -163,42 +155,8 @@ class Rex:
     def GetTimeSinceReset(self):
         return self._step_counter * self.time_step
 
-    def getImage(self):
-        # TODO
-        pb=self._pybullet_client
-        modelId=self.quadruped
-        # Center of mass position and orientation (of link-0, which is front link)
-        # returns position, orientation, coinertialframeposition, and some more things?
-        position, orientation, _, _, _, _ = pb.getLinkState(modelId, 1, computeForwardKinematics=True)
-        rot_matrix = pb.getMatrixFromQuaternion(orientation)
-        rot_matrix = np.array(rot_matrix).reshape(3, 3)
-
-        # print("###")
-        # print(position)
-        # print(orientation)
-
-        # Initial vectors for camera
-        # N-negative 1 given, (as model is in reverse ? keep looking into this)
-        init_camera_vector = (-1, 0, 0) # -x-axis
-        init_up_vector = (0, 0, 1) # z-axis
-
-        # offset camera position so it doesn't cut the model
-        # TODO : There's probably some bug in this, further testing required
-        camList = list(position)
-        camList[0] -= 0.2
-        position = tuple(camList)
-
-        # Rotated vectors
-        # N- camera stuff trying to move camera beneath the center of mass
-        camera_vector = rot_matrix.dot(init_camera_vector)
-        up_vector = rot_matrix.dot(init_up_vector)
-        view_matrix = pb.computeViewMatrix(position, position + 0.1 * camera_vector, up_vector)
-        img = pb.getCameraImage(10, 10, view_matrix, self.projection_matrix)
-        return img    
-
     def Step(self, action):
         for _ in range(self._action_repeat):
-            self.getImage()
             self.ApplyAction(action)
             self._pybullet_client.stepSimulation()
             self.ReceiveObservation()
