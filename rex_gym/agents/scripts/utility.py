@@ -17,7 +17,7 @@ import os
 import re
 import warnings
 
-import ruamel.yaml as yaml
+import ruamel_yaml.yaml as yaml
 import tensorflow as tf
 
 from rex_gym.agents.tools import wrappers
