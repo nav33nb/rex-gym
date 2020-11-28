@@ -193,7 +193,7 @@ class Rex:
         camera_vector = rot_matrix.dot(init_camera_vector)
         up_vector = rot_matrix.dot(init_up_vector)
         view_matrix = pb.computeViewMatrix(position, position + 0.1 * camera_vector, up_vector)
-        img = pb.getCameraImage(100, 100, view_matrix, self.projection_matrix)
+        img = pb.getCameraImage(10, 10, view_matrix, self.projection_matrix)
         return img    
 
     def Step(self, action):

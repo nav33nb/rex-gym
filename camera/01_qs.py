@@ -90,3 +90,6 @@ while True:
     # getImage2()
     getImage()
     time.sleep(1./60.)
+
+    # How is a model actually manipulated ?
+    # 
