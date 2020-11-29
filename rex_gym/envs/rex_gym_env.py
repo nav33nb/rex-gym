@@ -307,6 +307,11 @@ class RexGymEnv(gym.Env):
                 numSolverIterations=int(self._num_bullet_solver_iterations))
             self._pybullet_client.setTimeStep(self._time_step)
             self._ground_id = self._pybullet_client.loadURDF("%s/plane.urdf" % self._urdf_root)
+
+            # Uncomment this below, to load the car model
+            # self.carStartPos = [-1,0,6]
+            # self._carId = self._pybullet_client.loadURDF("%s/assets/urdf/car.urdf" % self._urdf_root, self.carStartPos)
+
             if self._reflection:
                 self._pybullet_client.changeVisualShape(self._ground_id, -1, rgbaColor=[1, 1, 1, 0.8])
                 self._pybullet_client.configureDebugVisualizer(
