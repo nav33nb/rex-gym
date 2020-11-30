@@ -184,13 +184,14 @@ class Rex:
         # N- camera stuff trying to move camera beneath the center of mass
         camera_vector = rot_matrix.dot(init_camera_vector)
         up_vector = rot_matrix.dot(init_up_vector)
+        fov, aspect, nearplane, farplane = 60, 1.0, 0.01, 100
         view_matrix = pb.computeViewMatrix(position, position + 0.1 * camera_vector, up_vector)
-        img = pb.getCameraImage(width=500, height=500, renderer=pb.ER_BULLET_HARDWARE_OPENGL, viewMatrix=view_matrix, projectionMatrix=self.projection_matrix)
+        projection_matrix = pb.computeProjectionMatrixFOV(fov, aspect, nearplane, farplane)
+        img = pb.getCameraImage(width=500, height=500, renderer=pb.ER_BULLET_HARDWARE_OPENGL, viewMatrix=view_matrix, projectionMatrix=projection_matrix)
         return img
 
     def Step(self, action):
         for _ in range(self._action_repeat):
-            self.getImage()
             self.ApplyAction(action)
             self._pybullet_client.stepSimulation()
             self.ReceiveObservation()

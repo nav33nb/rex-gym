@@ -390,6 +390,7 @@ class RexGymEnv(gym.Env):
         self._last_base_position = self.rex.GetBasePosition()
         self._last_base_orientation = self.rex.GetBaseOrientation()
         if self._is_render:
+            self.rex.getImage()
             # Sleep, otherwise the computation takes less time than real time,
             # which will make the visualization like a fast-forward video.
             time_spent = time.time() - self._last_frame_time
